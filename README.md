@@ -27,4 +27,5 @@ To cite this work:
     }
 =======
 # Torch_Projects
->>>>>>> ac599bb5d55727c9a04086877a5da8a933792f42
+The code provided in layers is from another GitHub Repo. This is the link https://github.com/phy710/transform-based-layers.
+I am using this to complete a project.
