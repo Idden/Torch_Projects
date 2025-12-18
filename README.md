@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TNNLS 2024 Multichannel Orthogonal Transform-Based Perceptron Layers for Efficient ResNets
 
 Paper link: https://ieeexplore.ieee.org/abstract/document/10506207
@@ -24,3 +25,6 @@ To cite this work:
       year={2024},
       publisher={IEEE}
     }
+=======
+# Torch_Projects
+>>>>>>> ac599bb5d55727c9a04086877a5da8a933792f42
