@@ -27,5 +27,8 @@ To cite this work:
     }
 =======
 # Torch_Projects
-The code provided in layers is from another GitHub Repo. This is the link https://github.com/phy710/transform-based-layers.
+The code provided in layers is from other GitHub Repos. 
+- https://github.com/phy710/transform-based-layers 
+- https://github.com/phy710/ICML2023-HT/blob/main/QCHT/quantum_hadamard.ipynb
+
 I am using this to complete a project.

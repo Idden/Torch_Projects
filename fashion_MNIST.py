@@ -4,8 +4,10 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import torchvision
 from torchvision import transforms
-from layers.DCT import DCTConv2D
-from layers.WHT import WHTConv2D
+from qiskit import QuantumCircuit
+
+# from layers.DCT import DCTConv2D
+# from layers.WHT import WHTConv2D
 
 # download format
 # turns MNIST images to PyTorch tensors and normalizes between [-1,1] centered at 0
@@ -53,15 +55,6 @@ class CNN(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.wht = WHTConv2D(
-            height=28,
-            width=28,
-            in_channels=1,
-            out_channels=32,
-            pods=1,
-            residual=True
-        )
-
         self.pool = nn.MaxPool2d(2, 2)
         self.fc1 = nn.Linear(32 * 14 * 14, 128)
         self.fc2 = nn.Linear(128, 10)
@@ -104,7 +97,7 @@ for epoch in range(num_epochs):
 
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(train_loader):.4f}")
 
-# eval
+# evalulate results and accuracy
 model.eval()
 correct = 0
 total = 0
