@@ -4,16 +4,66 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import torchvision
 from torchvision import transforms
-from qiskit import QuantumCircuit
 
-# from layers.DCT import DCTConv2D
-# from layers.WHT import WHTConv2D
+import numpy as np
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+
+class HadamardTransform:
+    def __init__(self):
+        self.backend = AerSimulator(method="statevector")
+
+    def __call__(self, x):
+
+        # ensures cpu usage
+        if x.is_cuda:
+            x = x.cpu()
+
+        # flatten image for qiskit
+        img_flat = x.flatten().detach().numpy().astype(np.float64)
+        len = img_flat.size
+
+        # find number of qubits
+        n_qubits = int(np.ceil(np.log2(len)))
+        N = np.pow(2, n_qubits)
+
+        # pad
+        state_vector = np.zeros(N, dtype=np.float64)
+        state_vector[:len] = img_flat
+
+        # normalize constant
+        norm = np.linalg.norm(state_vector)
+
+        # cover edge case of fully black image
+        if norm == 0:
+            return torch.zeros_like(x)
+        
+        # normalize the state vector
+        state_vector = state_vector / norm
+
+        # circuit initialized with flattened image and hadamard on all rows
+        qc = QuantumCircuit(n_qubits)
+        qc.initialize(state_vector, qc.qubits)
+        qc.h(range(n_qubits))
+        qc.save_statevector()
+
+        # create simulatible circuit
+        tqc = transpile(qc, self.backend)
+        result = self.backend.run(tqc).result()
+        state = np.asarray(result.get_statevector(tqc))
+
+        # take first 784 entries back, convert to real features
+        y = np.real(state[:len]) * norm
+        y = y.reshape(x.shape).astype(np.float32)
+
+        return torch.from_numpy(y)
 
 # download format
 # turns MNIST images to PyTorch tensors and normalizes between [-1,1] centered at 0
 transform = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
+    transforms.Normalize((0.5,), (0.5,)),
+    HadamardTransform()
 ])
 
 # download data
@@ -60,7 +110,6 @@ class CNN(nn.Module):
         self.fc2 = nn.Linear(128, 10)
 
     def forward(self, x):
-        x = self.wht(x)
         x = F.relu(x)
         x = self.pool(x)
         x = torch.flatten(x, start_dim=1)
