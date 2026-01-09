@@ -61,25 +61,16 @@ class HadamardTransform:
 # download format
 # turns MNIST images to PyTorch tensors and normalizes between [-1,1] centered at 0
 transform = transforms.Compose([
+    transforms.RandomCrop(28, padding=3),
+    transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
     transforms.Normalize((0.5,), (0.5,)),
     HadamardTransform()
 ])
 
 # download data
-train_dataset = torchvision.datasets.FashionMNIST(
-    root='./data',
-    train=True,
-    download=True,
-    transform=transform
-)
-
-test_dataset = torchvision.datasets.FashionMNIST(
-    root='./data',
-    train=False,            # testing data so labels are unknown during training
-    download=True,
-    transform=transform
-)
+train_dataset = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transform)
+test_dataset = torchvision.datasets.FashionMNIST(root='./data', train=False, download=True, transform=transform)
 
 # loaders
 train_loader = DataLoader(
@@ -136,7 +127,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = CNN().to(device)
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Muon(model.parameters(), lr=0.001)
 
 # training loop
 num_epochs = 25

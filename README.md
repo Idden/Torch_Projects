@@ -31,4 +31,4 @@ The code provided in layers is from other GitHub Repos.
 - https://github.com/phy710/transform-based-layers 
 - https://github.com/phy710/ICML2023-HT/blob/main/QCHT/quantum_hadamard.ipynb
 
-I made a CNN that uses Qiskit to simulate a Hadamard Transform (HT). The HT is applied to the Fashion MNIST dataset and with the transformed data I used PyTorch to create a CNN and test the accuracy of my CNN.
+I made a CNN that uses Qiskit to simulate a Hadamard Transform (HT). The HT is applied to the Fashion MNIST dataset and with the transformed data I used PyTorch to create and train the model.
