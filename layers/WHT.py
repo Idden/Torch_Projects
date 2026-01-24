@@ -77,13 +77,14 @@ class WHT1D(torch.nn.Module):
 class WHTConv2D(torch.nn.Module):
     def __init__(self, height, width, in_channels, out_channels, pods = 1, residual=True):
         super().__init__()
-        self.height = height       
+        self.height = height
         self.width = width
-        self.height_pad = find_min_power(self.height)  
+        self.height_pad = find_min_power(self.height)
         self.width_pad = find_min_power(self.width)
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.pods = pods
+        
         self.conv = torch.nn.ModuleList([torch.nn.Conv2d(in_channels, out_channels, 1, bias=False) for i in range(self.pods)])
         self.ST = torch.nn.ModuleList([SoftThresholding((self.height_pad, self.width_pad)) for i in range(self.pods)])
         self.v = torch.nn.ParameterList([torch.rand((self.height_pad, self.width_pad)) for i in range(self.pods)])
